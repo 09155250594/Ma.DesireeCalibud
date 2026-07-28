@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For My Favorite Person</title>
+  <style>
+    :root {
+      --bg-image-url: url('https://cdn.phototourl.com/free/2026-07-26-78802b66-00ee-4d48-8d7c-f8833a65fdb5.jpg');
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --primary-color: #e63946;
+      --text-color: #4a4a4a;
+      --accent-color: #ffb703;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      font-family: 'Georgia', serif;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), var(--bg-image-url);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Back Button */
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      background: var(--card-bg);
+      color: var(--primary-color);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 50px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: bold;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-color);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(230, 57, 70, 0.4);
+    }
+
+    .back-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Music Control Box with Volume Slider */
+    .music-control-box {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 50px;
+      padding: 8px 16px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .music-toggle-btn {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: inherit;
+    }
+
+    /* Styled Volume Slider */
+    .volume-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 70px;
+      height: 5px;
+      border-radius: 5px;
+      background: #ddd;
+      outline: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Outer Container */
+    .letter-container {
+      position: relative;
+      background: rgba(255, 248, 240, 0.85); 
+      padding: 25px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 2px dashed rgba(230, 57, 70, 0.4); 
+      max-width: 550px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .letter-container::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 15px solid rgba(230, 57, 70, 0.5);
+    }
+
+    /* Inner Card */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 25px 20px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      position: relative;
+      z-index: 10;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .heart-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      animation: pulse 1.5s infinite;
+      display: inline-block;
+      margin-bottom: 5px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: #2b2b2b;
+      margin-bottom: 4px;
+    }
+
+    p.subtitle {
+      font-style: italic;
+      color: #666;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+
+    /* Slideshow Component */
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 550px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background-color: #000;
+      margin-bottom: 15px;
+    }
+
+    .slideshow-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    /* Controls overlay */
+    .slide-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background 0.3s;
+      user-select: none;
+    }
+
+    .slide-btn:hover {
+      background: var(--primary-color);
+    }
+
+    .prev-btn { left: 10px; }
+    .next-btn { right: 10px; }
+
+    .image-counter {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-family: sans-serif;
+    }
+
+    /* Floating Heart Particles */
+    #hearts-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .heart-particle {
+      position: absolute;
+      bottom: -100px;
+      font-size: 1.6rem;
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      animation: floatUp 6s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Buttons -->
+  <button class="back-btn" onclick="goBack()">
+    &#10094; Back
+  </button>
+
+  <!-- Music Box with Interactive Volume Control -->
+  <div class="music-control-box">
+    <button class="music-toggle-btn" id="musicToggleBtn" onclick="toggleMusic()">
+      <span id="musicIcon">🎵</span>
+    </button>
+    <input 
+      type="range" 
+      id="volumeSlider" 
+      class="volume-slider" 
+      min="0" 
+      max="1" 
+      step="0.01" 
+      value="0.5" 
+      oninput="adjustVolume(this.value)" 
+    />
+  </div>
+
+  <!-- Audio Element (Auto-playing and Looping) -->
+  <audio id="bgMusic" loop autoplay preload="auto">
+    <source src="Nahanap-Kita.mp3" type="audio/mpeg" />
+  </audio>
+
+  <div class="letter-container">
+    <div class="card">
+      <div class="heart-icon">💖</div>
+      <h1>Our Best Memories</h1>
+      <p class="subtitle">A visual journey through my favorite moments with you.</p>
+
+      <!-- Slideshow Component -->
+      <div class="slideshow-container" id="slideshow">
+        <img id="slide-image" src="" alt="Memory Image" />
+        <button class="slide-btn prev-btn" onclick="prevSlide()">&#10094;</button>
+        <button class="slide-btn next-btn" onclick="nextSlide()">&#10095;</button>
+        <div class="image-counter" id="counter">1 / 100</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="hearts-container"></div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    // --- BACKGROUND MUSIC & VOLUME LOGIC ---
+    const bgMusic = document.getElementById('bgMusic');
+    const musicIcon = document.getElementById('musicIcon');
+    const volumeSlider = document.getElementById('volumeSlider');
+    let isPlaying = false;
+    let lastVolume = 0.5;
+
+    function playAudio() {
+      bgMusic.volume = volumeSlider.value;
+      bgMusic.play().then(() => {
+        isPlaying = true;
+        updateIcon();
+      }).catch(err => {
+        isPlaying = false;
+        musicIcon.textContent = "🔇";
+      });
+    }
+
+    function adjustVolume(val) {
+      bgMusic.volume = val;
+      if (val > 0 && bgMusic.paused) {
+        bgMusic.play();
+        isPlaying = true;
+      }
+      updateIcon();
+    }
+
+    function toggleMusic() {
+      if (isPlaying && bgMusic.volume > 0) {
+        lastVolume = volumeSlider.value > 0 ? volumeSlider.value : 0.5;
+        bgMusic.volume = 0;
+        volumeSlider.value = 0;
+        isPlaying = false;
+      } else {
+        volumeSlider.value = lastVolume;
+        bgMusic.volume = lastVolume;
+        playAudio();
+      }
+      updateIcon();
+    }
+
+    function updateIcon() {
+      if (bgMusic.volume == 0 || bgMusic.paused) {
+        musicIcon.textContent = "🔇";
+      } else if (bgMusic.volume < 0.5) {
+        musicIcon.textContent = "🔉";
+      } else {
+        musicIcon.textContent = "🎵";
+      }
+    }
+
+    // Try playing on load
+    window.addEventListener('DOMContentLoaded', () => {
+      bgMusic.volume = 0.5;
+      playAudio();
+    });
+
+    // Mobile fallback on interaction
+    const startAudioOnInteraction = () => {
+      if (!isPlaying) {
+        playAudio();
+      }
+      document.removeEventListener('click', startAudioOnInteraction);
+      document.removeEventListener('touchstart', startAudioOnInteraction);
+    };
+
+    document.addEventListener('click', startAudioOnInteraction);
+    document.addEventListener('touchstart', startAudioOnInteraction);
+
+
+    // --- SLIDESHOW LOGIC ---
+    const images = [
+      'https://cdn.phototourl.com/free/2026-07-28-017f98ae-9cdf-4b8a-8cf5-4b67de37c51f.jpg',
+      'https://cdn.phototourl.com/free/2026-07-28-b6dddd47-9591-4ace-aab7-466e9a0669c0.jpg',
+      'https://cdn.phototourl.com/free/2026-07-28-08a84f89-bb1c-4fdf-8670-8c020545ca3a.jpg',
+      'https://cdn.phototourl.com/free/2026-07-28-46cd3903-b3c9-40b6-80d6-7fea57587893.jpg',
+      'https://cdn.phototourl.com/free/2026-07-28-cbeaa76d-dc93-4631-a57b-63f016f493c8.jpg',
+      'https://cdn.phototourl.com/free/2026-07-28-4dc13d21-4e66-4e8a-b5ef-e6d952708822.jpg',
+    ];
+
+    let currentIndex = 0;
+    let autoPlayTimer = null;
+
+    const slideImg = document.getElementById('slide-image');
+    const counter = document.getElementById('counter');
+    const slideshowContainer = document.getElementById('slideshow');
+
+    function updateSlide() {
+      slideImg.style.opacity = 0;
+      setTimeout(() => {
+        slideImg.src = images[currentIndex];
+        counter.textContent = `${currentIndex + 1} / ${images.length}`;
+        slideImg.style.opacity = 1;
+      }, 200);
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateSlide();
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateSlide();
+    }
+
+    function startAutoPlay() {
+      autoPlayTimer = setInterval(nextSlide, 2000); 
+    }
+
+    function stopAutoPlay() {
+      clearInterval(autoPlayTimer);
+    }
+
+    // Initialize Slideshow
+    updateSlide();
+    startAutoPlay();
+
+    slideshowContainer.addEventListener('mouseenter', stopAutoPlay);
+    slideshowContainer.addEventListener('mouseleave', startAutoPlay);
+
+    // --- FLOATING HEARTS LOGIC ---
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart-particle');
+      heart.innerHTML = '💖';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+      
+      document.getElementById('hearts-container').appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 7000);
+    }
+
+    setInterval(createHeart, 500);
+  </script>
+</body>
+</html>
